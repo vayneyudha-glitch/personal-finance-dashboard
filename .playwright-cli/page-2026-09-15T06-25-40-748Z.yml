@@ -1,0 +1,73 @@
+- generic [ref=f4e2]:
+  - complementary [ref=f4e3]:
+    - generic [ref=f4e4]:
+      - heading "Finance" [level=2] [ref=f4e5]
+      - paragraph [ref=f4e6]: Personal Dashboard
+    - generic [ref=f4e7]:
+      - paragraph [ref=f4e8]: Demo User
+      - paragraph [ref=f4e9]: User
+    - navigation [ref=f4e10]:
+      - button "Dashboard" [ref=f4e11] [cursor=pointer]
+      - button "Transactions" [ref=f4e12] [cursor=pointer]
+      - button "Analytics" [ref=f4e13] [cursor=pointer]
+      - button "Budget" [ref=f4e14] [cursor=pointer]
+    - button "Logout" [ref=f4e16] [cursor=pointer]
+  - button "Buka menu" [ref=f4e17] [cursor=pointer]: ☰
+  - button "Ganti tema" [ref=f4e18] [cursor=pointer]: 🌙
+  - main [ref=f4e19]:
+    - generic [ref=f4e20]:
+      - generic [ref=f4e21]:
+        - heading "Dashboard" [level=1] [ref=f4e22]
+        - paragraph [ref=f4e23]: Ringkasan keuangan Anda
+      - generic [ref=f4e24]:
+        - generic [ref=f4e25]:
+          - generic [ref=f4e26]: Income
+          - paragraph [ref=f4e27]: Total Pemasukan
+          - heading "Rp 30.500.000" [level=3] [ref=f4e28]
+        - generic [ref=f4e29]:
+          - generic [ref=f4e30]: Expense
+          - paragraph [ref=f4e31]: Total Pengeluaran
+          - heading "Rp 7.650.000" [level=3] [ref=f4e32]
+        - generic [ref=f4e33]:
+          - generic [ref=f4e34]: Balance
+          - paragraph [ref=f4e35]: Saldo
+          - heading "Rp 22.850.000" [level=3] [ref=f4e36]
+        - generic [ref=f4e37]:
+          - generic [ref=f4e38]: Count
+          - paragraph [ref=f4e39]: Jumlah Transaksi
+          - heading "30" [level=3] [ref=f4e40]
+      - generic [ref=f4e41]:
+        - heading "Statistik Pengeluaran" [level=3] [ref=f4e43]
+        - generic [ref=f4e44]:
+          - generic [ref=f4e45]:
+            - paragraph [ref=f4e46]: Pengeluaran Minggu Ini
+            - paragraph [ref=f4e47]: Rp 750.000
+            - paragraph [ref=f4e48]: 3 transaksi
+          - generic [ref=f4e49]:
+            - paragraph [ref=f4e50]: Pengeluaran Bulan Ini
+            - paragraph [ref=f4e51]: Rp 1.850.000
+            - paragraph [ref=f4e52]: 7 transaksi
+          - generic [ref=f4e53]:
+            - paragraph [ref=f4e54]: Rata-rata Harian (Bulan Ini)
+            - paragraph [ref=f4e55]: Rp 123.333,333
+          - generic [ref=f4e56]:
+            - paragraph [ref=f4e57]: Pengeluaran vs Bulan Lalu
+            - paragraph [ref=f4e58]: "-30.7% (lebih sedikit)"
+      - generic [ref=f4e59]:
+        - generic [ref=f4e60]:
+          - heading "Ringkasan Bulan Berjalan" [level=3] [ref=f4e61]
+          - generic [ref=f4e62]: September 2026
+        - generic [ref=f4e63]:
+          - generic [ref=f4e64]:
+            - paragraph [ref=f4e65]: Pemasukan Bulan Ini
+            - paragraph [ref=f4e66]: Rp 2.000.000
+          - generic [ref=f4e67]:
+            - paragraph [ref=f4e68]: Pengeluaran Bulan Ini
+            - paragraph [ref=f4e69]: Rp 1.850.000
+          - generic [ref=f4e70]:
+            - paragraph [ref=f4e71]: Saldo Bulan Ini
+            - paragraph [ref=f4e72]: Rp 150.000
+          - generic [ref=f4e73]:
+            - paragraph [ref=f4e74]: Transaksi Bulan Ini
+            - paragraph [ref=f4e75]: "9"
+      - heading "Grafik Pemasukan vs Pengeluaran" [level=3] [ref=f4e78]

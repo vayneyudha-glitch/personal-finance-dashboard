@@ -1,0 +1,363 @@
+- generic [ref=e22]:
+  - complementary [ref=e23]:
+    - generic [ref=e24]:
+      - heading "Finance" [level=2] [ref=e25]
+      - paragraph [ref=e26]: Personal Dashboard
+    - generic [ref=e27]:
+      - paragraph [ref=e28]: Administrator
+      - paragraph [ref=e29]: Administrator
+    - navigation [ref=e30]:
+      - button "Dashboard" [ref=e31] [cursor=pointer]
+      - button "Transactions" [active] [ref=e32] [cursor=pointer]
+      - button "Analytics" [ref=e33] [cursor=pointer]
+      - button "Categories" [ref=e34] [cursor=pointer]
+      - button "Budget" [ref=e35] [cursor=pointer]
+      - button "Users" [ref=e36] [cursor=pointer]
+      - button "Import / Export" [ref=e37] [cursor=pointer]
+      - button "Settings" [ref=e38] [cursor=pointer]
+    - generic [ref=e39]:
+      - button "+ Tambah Transaksi" [ref=e40] [cursor=pointer]
+      - button "Export CSV" [ref=e41] [cursor=pointer]
+      - button "Import CSV" [ref=e42] [cursor=pointer]
+      - button "Hapus Semua Data" [ref=e43] [cursor=pointer]
+      - button "Logout" [ref=e44] [cursor=pointer]
+  - button "Ganti tema" [ref=e46] [cursor=pointer]: 🌙
+  - main [ref=e47]:
+    - generic [ref=e109]:
+      - generic [ref=e110]:
+        - heading "Daftar Transaksi" [level=1] [ref=e111]
+        - paragraph [ref=e112]: Kelola semua transaksi Anda
+      - generic [ref=e113]:
+        - textbox "Cari deskripsi..." [ref=e114]
+        - combobox [ref=e115]:
+          - option "Semua Jenis" [selected]
+          - option "Income"
+          - option "Expense"
+        - combobox [ref=e116]:
+          - option "Semua Kategori" [selected]
+          - option "Belanja"
+          - option "Bonus"
+          - option "Freelance"
+          - option "Gaji"
+          - option "Hiburan"
+          - option "Investasi"
+          - option "Kesehatan"
+          - option "Lainnya"
+          - option "Makanan"
+          - option "Tagihan"
+          - option "Transportasi"
+        - generic [ref=e117]:
+          - generic [ref=e118]: Dari
+          - textbox "Dari" [ref=e119]
+          - generic [ref=e120]: Sampai
+          - textbox "Sampai" [ref=e121]
+      - table [ref=e123]:
+        - rowgroup [ref=e124]:
+          - row [ref=e125]:
+            - columnheader "Tanggal" [ref=e126]
+            - columnheader "Deskripsi" [ref=e127]
+            - columnheader "Kategori" [ref=e128]
+            - columnheader "Jenis" [ref=e129]
+            - columnheader "Jumlah" [ref=e130]
+            - columnheader "Aksi" [ref=e131]
+        - rowgroup [ref=e132]:
+          - row [ref=e133]:
+            - cell "21 Sep 2026" [ref=e134]
+            - cell "Dividen saham" [ref=e135]
+            - cell "Investasi" [ref=e136]
+            - cell "Income" [ref=e137]
+            - cell "+ Rp 500.000" [ref=e138]
+            - cell [ref=e139]:
+              - generic [ref=e140]:
+                - button "Edit" [ref=e141] [cursor=pointer]
+                - button "Hapus" [ref=e142] [cursor=pointer]
+          - row [ref=e143]:
+            - cell "19 Sep 2026" [ref=e144]
+            - cell "Makan di restoran" [ref=e145]
+            - cell "Makanan" [ref=e146]
+            - cell "Expense" [ref=e147]
+            - cell "- Rp 250.000" [ref=e148]
+            - cell [ref=e149]:
+              - generic [ref=e150]:
+                - button "Edit" [ref=e151] [cursor=pointer]
+                - button "Hapus" [ref=e152] [cursor=pointer]
+          - row [ref=e153]:
+            - cell "17 Sep 2026" [ref=e154]
+            - cell "Vitamin" [ref=e155]
+            - cell "Kesehatan" [ref=e156]
+            - cell "Expense" [ref=e157]
+            - cell "- Rp 200.000" [ref=e158]
+            - cell [ref=e159]:
+              - generic [ref=e160]:
+                - button "Edit" [ref=e161] [cursor=pointer]
+                - button "Hapus" [ref=e162] [cursor=pointer]
+          - row [ref=e163]:
+            - cell "14 Sep 2026" [ref=e164]
+            - cell "Beli skincare" [ref=e165]
+            - cell "Belanja" [ref=e166]
+            - cell "Expense" [ref=e167]
+            - cell "- Rp 300.000" [ref=e168]
+            - cell [ref=e169]:
+              - generic [ref=e170]:
+                - button "Edit" [ref=e171] [cursor=pointer]
+                - button "Hapus" [ref=e172] [cursor=pointer]
+          - row [ref=e173]:
+            - cell "11 Sep 2026" [ref=e174]
+            - cell "Proyek desain logo" [ref=e175]
+            - cell "Freelance" [ref=e176]
+            - cell "Income" [ref=e177]
+            - cell "+ Rp 1.500.000" [ref=e178]
+            - cell [ref=e179]:
+              - generic [ref=e180]:
+                - button "Edit" [ref=e181] [cursor=pointer]
+                - button "Hapus" [ref=e182] [cursor=pointer]
+          - row [ref=e183]:
+            - cell "9 Sep 2026" [ref=e184]
+            - cell "Nonton bioskop" [ref=e185]
+            - cell "Hiburan" [ref=e186]
+            - cell "Expense" [ref=e187]
+            - cell "- Rp 150.000" [ref=e188]
+            - cell [ref=e189]:
+              - generic [ref=e190]:
+                - button "Edit" [ref=e191] [cursor=pointer]
+                - button "Hapus" [ref=e192] [cursor=pointer]
+          - row [ref=e193]:
+            - cell "7 Sep 2026" [ref=e194]
+            - cell "Listrik & air" [ref=e195]
+            - cell "Tagihan" [ref=e196]
+            - cell "Expense" [ref=e197]
+            - cell "- Rp 350.000" [ref=e198]
+            - cell [ref=e199]:
+              - generic [ref=e200]:
+                - button "Edit" [ref=e201] [cursor=pointer]
+                - button "Hapus" [ref=e202] [cursor=pointer]
+          - row [ref=e203]:
+            - cell "4 Sep 2026" [ref=e204]
+            - cell "Bensin motor" [ref=e205]
+            - cell "Transportasi" [ref=e206]
+            - cell "Expense" [ref=e207]
+            - cell "- Rp 100.000" [ref=e208]
+            - cell [ref=e209]:
+              - generic [ref=e210]:
+                - button "Edit" [ref=e211] [cursor=pointer]
+                - button "Hapus" [ref=e212] [cursor=pointer]
+          - row [ref=e213]:
+            - cell "2 Sep 2026" [ref=e214]
+            - cell "Belanja bulanan" [ref=e215]
+            - cell "Makanan" [ref=e216]
+            - cell "Expense" [ref=e217]
+            - cell "- Rp 500.000" [ref=e218]
+            - cell [ref=e219]:
+              - generic [ref=e220]:
+                - button "Edit" [ref=e221] [cursor=pointer]
+                - button "Hapus" [ref=e222] [cursor=pointer]
+          - row [ref=e223]:
+            - cell "31 Agu 2026" [ref=e224]
+            - cell "Gaji bulanan" [ref=e225]
+            - cell "Gaji" [ref=e226]
+            - cell "Income" [ref=e227]
+            - cell "+ Rp 8.000.000" [ref=e228]
+            - cell [ref=e229]:
+              - generic [ref=e230]:
+                - button "Edit" [ref=e231] [cursor=pointer]
+                - button "Hapus" [ref=e232] [cursor=pointer]
+          - row [ref=e233]:
+            - cell "24 Agu 2026" [ref=e234]
+            - cell "Sedekah" [ref=e235]
+            - cell "Lainnya" [ref=e236]
+            - cell "Expense" [ref=e237]
+            - cell "- Rp 100.000" [ref=e238]
+            - cell [ref=e239]:
+              - generic [ref=e240]:
+                - button "Edit" [ref=e241] [cursor=pointer]
+                - button "Hapus" [ref=e242] [cursor=pointer]
+          - row [ref=e243]:
+            - cell "20 Agu 2026" [ref=e244]
+            - cell "Kopi" [ref=e245]
+            - cell "Makanan" [ref=e246]
+            - cell "Expense" [ref=e247]
+            - cell "- Rp 120.000" [ref=e248]
+            - cell [ref=e249]:
+              - generic [ref=e250]:
+                - button "Edit" [ref=e251] [cursor=pointer]
+                - button "Hapus" [ref=e252] [cursor=pointer]
+          - row [ref=e253]:
+            - cell "18 Agu 2026" [ref=e254]
+            - cell "Cek lab" [ref=e255]
+            - cell "Kesehatan" [ref=e256]
+            - cell "Expense" [ref=e257]
+            - cell "- Rp 400.000" [ref=e258]
+            - cell [ref=e259]:
+              - generic [ref=e260]:
+                - button "Edit" [ref=e261] [cursor=pointer]
+                - button "Hapus" [ref=e262] [cursor=pointer]
+          - row [ref=e263]:
+            - cell "15 Agu 2026" [ref=e264]
+            - cell "Beli sepatu" [ref=e265]
+            - cell "Belanja" [ref=e266]
+            - cell "Expense" [ref=e267]
+            - cell "- Rp 750.000" [ref=e268]
+            - cell [ref=e269]:
+              - generic [ref=e270]:
+                - button "Edit" [ref=e271] [cursor=pointer]
+                - button "Hapus" [ref=e272] [cursor=pointer]
+          - row [ref=e273]:
+            - cell "13 Agu 2026" [ref=e274]
+            - cell "Bonus target" [ref=e275]
+            - cell "Bonus" [ref=e276]
+            - cell "Income" [ref=e277]
+            - cell "+ Rp 2.000.000" [ref=e278]
+            - cell [ref=e279]:
+              - generic [ref=e280]:
+                - button "Edit" [ref=e281] [cursor=pointer]
+                - button "Hapus" [ref=e282] [cursor=pointer]
+          - row [ref=e283]:
+            - cell "10 Agu 2026" [ref=e284]
+            - cell "Game premium" [ref=e285]
+            - cell "Hiburan" [ref=e286]
+            - cell "Expense" [ref=e287]
+            - cell "- Rp 200.000" [ref=e288]
+            - cell [ref=e289]:
+              - generic [ref=e290]:
+                - button "Edit" [ref=e291] [cursor=pointer]
+                - button "Hapus" [ref=e292] [cursor=pointer]
+          - row [ref=e293]:
+            - cell "8 Agu 2026" [ref=e294]
+            - cell "Internet & HP" [ref=e295]
+            - cell "Tagihan" [ref=e296]
+            - cell "Expense" [ref=e297]
+            - cell "- Rp 250.000" [ref=e298]
+            - cell [ref=e299]:
+              - generic [ref=e300]:
+                - button "Edit" [ref=e301] [cursor=pointer]
+                - button "Hapus" [ref=e302] [cursor=pointer]
+          - row [ref=e303]:
+            - cell "5 Agu 2026" [ref=e304]
+            - cell "Service motor" [ref=e305]
+            - cell "Transportasi" [ref=e306]
+            - cell "Expense" [ref=e307]
+            - cell "- Rp 300.000" [ref=e308]
+            - cell [ref=e309]:
+              - generic [ref=e310]:
+                - button "Edit" [ref=e311] [cursor=pointer]
+                - button "Hapus" [ref=e312] [cursor=pointer]
+          - row [ref=e313]:
+            - cell "3 Agu 2026" [ref=e314]
+            - cell "Belanja bulanan" [ref=e315]
+            - cell "Makanan" [ref=e316]
+            - cell "Expense" [ref=e317]
+            - cell "- Rp 550.000" [ref=e318]
+            - cell [ref=e319]:
+              - generic [ref=e320]:
+                - button "Edit" [ref=e321] [cursor=pointer]
+                - button "Hapus" [ref=e322] [cursor=pointer]
+          - row [ref=e323]:
+            - cell "31 Jul 2026" [ref=e324]
+            - cell "Gaji bulan lalu" [ref=e325]
+            - cell "Gaji" [ref=e326]
+            - cell "Income" [ref=e327]
+            - cell "+ Rp 8.000.000" [ref=e328]
+            - cell [ref=e329]:
+              - generic [ref=e330]:
+                - button "Edit" [ref=e331] [cursor=pointer]
+                - button "Hapus" [ref=e332] [cursor=pointer]
+          - row [ref=e333]:
+            - cell "27 Jul 2026" [ref=e334]
+            - cell "Donasi" [ref=e335]
+            - cell "Lainnya" [ref=e336]
+            - cell "Expense" [ref=e337]
+            - cell "- Rp 200.000" [ref=e338]
+            - cell [ref=e339]:
+              - generic [ref=e340]:
+                - button "Edit" [ref=e341] [cursor=pointer]
+                - button "Hapus" [ref=e342] [cursor=pointer]
+          - row [ref=e343]:
+            - cell "19 Jul 2026" [ref=e344]
+            - cell "Dinner" [ref=e345]
+            - cell "Makanan" [ref=e346]
+            - cell "Expense" [ref=e347]
+            - cell "- Rp 300.000" [ref=e348]
+            - cell [ref=e349]:
+              - generic [ref=e350]:
+                - button "Edit" [ref=e351] [cursor=pointer]
+                - button "Hapus" [ref=e352] [cursor=pointer]
+          - row [ref=e353]:
+            - cell "17 Jul 2026" [ref=e354]
+            - cell "Obat" [ref=e355]
+            - cell "Kesehatan" [ref=e356]
+            - cell "Expense" [ref=e357]
+            - cell "- Rp 150.000" [ref=e358]
+            - cell [ref=e359]:
+              - generic [ref=e360]:
+                - button "Edit" [ref=e361] [cursor=pointer]
+                - button "Hapus" [ref=e362] [cursor=pointer]
+          - row [ref=e363]:
+            - cell "14 Jul 2026" [ref=e364]
+            - cell "Baju" [ref=e365]
+            - cell "Belanja" [ref=e366]
+            - cell "Expense" [ref=e367]
+            - cell "- Rp 900.000" [ref=e368]
+            - cell [ref=e369]:
+              - generic [ref=e370]:
+                - button "Edit" [ref=e371] [cursor=pointer]
+                - button "Hapus" [ref=e372] [cursor=pointer]
+          - row [ref=e373]:
+            - cell "12 Jul 2026" [ref=e374]
+            - cell "Website" [ref=e375]
+            - cell "Freelance" [ref=e376]
+            - cell "Income" [ref=e377]
+            - cell "+ Rp 3.000.000" [ref=e378]
+            - cell [ref=e379]:
+              - generic [ref=e380]:
+                - button "Edit" [ref=e381] [cursor=pointer]
+                - button "Hapus" [ref=e382] [cursor=pointer]
+          - row [ref=e383]:
+            - cell "9 Jul 2026" [ref=e384]
+            - cell "Konser" [ref=e385]
+            - cell "Hiburan" [ref=e386]
+            - cell "Expense" [ref=e387]
+            - cell "- Rp 500.000" [ref=e388]
+            - cell [ref=e389]:
+              - generic [ref=e390]:
+                - button "Edit" [ref=e391] [cursor=pointer]
+                - button "Hapus" [ref=e392] [cursor=pointer]
+          - row [ref=e393]:
+            - cell "7 Jul 2026" [ref=e394]
+            - cell "Listrik" [ref=e395]
+            - cell "Tagihan" [ref=e396]
+            - cell "Expense" [ref=e397]
+            - cell "- Rp 400.000" [ref=e398]
+            - cell [ref=e399]:
+              - generic [ref=e400]:
+                - button "Edit" [ref=e401] [cursor=pointer]
+                - button "Hapus" [ref=e402] [cursor=pointer]
+          - row [ref=e403]:
+            - cell "4 Jul 2026" [ref=e404]
+            - cell "Tol" [ref=e405]
+            - cell "Transportasi" [ref=e406]
+            - cell "Expense" [ref=e407]
+            - cell "- Rp 80.000" [ref=e408]
+            - cell [ref=e409]:
+              - generic [ref=e410]:
+                - button "Edit" [ref=e411] [cursor=pointer]
+                - button "Hapus" [ref=e412] [cursor=pointer]
+          - row [ref=e413]:
+            - cell "2 Jul 2026" [ref=e414]
+            - cell "Belanja" [ref=e415]
+            - cell "Makanan" [ref=e416]
+            - cell "Expense" [ref=e417]
+            - cell "- Rp 600.000" [ref=e418]
+            - cell [ref=e419]:
+              - generic [ref=e420]:
+                - button "Edit" [ref=e421] [cursor=pointer]
+                - button "Hapus" [ref=e422] [cursor=pointer]
+          - row [ref=e423]:
+            - cell "30 Jun 2026" [ref=e424]
+            - cell "Gaji 2 bulan lalu" [ref=e425]
+            - cell "Gaji" [ref=e426]
+            - cell "Income" [ref=e427]
+            - cell "+ Rp 7.500.000" [ref=e428]
+            - cell [ref=e429]:
+              - generic [ref=e430]:
+                - button "Edit" [ref=e431] [cursor=pointer]
+                - button "Hapus" [ref=e432] [cursor=pointer]

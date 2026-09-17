@@ -1,0 +1,21 @@
+- generic [ref=f2e3]:
+  - generic [ref=f2e4]:
+    - heading "Finance Dashboard" [level=1] [ref=f2e5]
+    - paragraph [ref=f2e6]: Masuk untuk melanjutkan
+  - generic [ref=f2e7]:
+    - generic [ref=f2e8]:
+      - generic [ref=f2e9]: Email atau Nomor HP
+      - textbox "Email atau Nomor HP" [ref=f2e10]:
+        - /placeholder: admin@finance.demo
+    - generic [ref=f2e11]:
+      - generic [ref=f2e12]: Password
+      - generic [ref=f2e13]:
+        - textbox "Password" [ref=f2e14]:
+          - /placeholder: Masukkan password
+        - button "Lihat password" [ref=f2e15] [cursor=pointer]: 👁
+    - button "Login" [ref=f2e16] [cursor=pointer]
+  - generic [ref=f2e17]:
+    - paragraph [ref=f2e18]: "Akun Demo:"
+    - paragraph [ref=f2e19]: "Admin: admin@finance.demo / admin123"
+    - paragraph [ref=f2e20]: "User: user@finance.demo / user123"
+  - paragraph [ref=f2e21]: Demo mode — otentikasi localStorage, bukan untuk production.

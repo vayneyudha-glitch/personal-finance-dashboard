@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+
+# Environment variables (JANGAN commit!)
+.env
+
+# Database files
+*.db
+*.sqlite
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/

@@ -1,0 +1,56 @@
+- generic [ref=e22]:
+  - complementary [ref=e23]:
+    - generic [ref=e24]:
+      - heading "Finance" [level=2] [ref=e25]
+      - paragraph [ref=e26]: Personal Dashboard
+    - generic [ref=e27]:
+      - paragraph [ref=e28]: Administrator
+      - paragraph [ref=e29]: Administrator
+    - navigation [ref=e30]:
+      - button "Dashboard" [ref=e31] [cursor=pointer]
+      - button "Transactions" [ref=e32] [cursor=pointer]
+      - button "Analytics" [ref=e33] [cursor=pointer]
+      - button "Categories" [ref=e34] [cursor=pointer]
+      - button "Budget" [ref=e35] [cursor=pointer]
+      - button "Users" [ref=e36] [cursor=pointer]
+      - button "Import / Export" [ref=e37] [cursor=pointer]
+      - button "Settings" [active] [ref=e38] [cursor=pointer]
+    - generic [ref=e39]:
+      - button "+ Tambah Transaksi" [ref=e40] [cursor=pointer]
+      - button "Export CSV" [ref=e41] [cursor=pointer]
+      - button "Import CSV" [ref=e42] [cursor=pointer]
+      - button "Hapus Semua Data" [ref=e43] [cursor=pointer]
+      - button "Logout" [ref=e44] [cursor=pointer]
+  - button "Ganti tema" [ref=e46] [cursor=pointer]: 🌙
+  - main [ref=e47]:
+    - generic [ref=e482]:
+      - generic [ref=e483]:
+        - heading "Pengaturan" [level=1] [ref=e484]
+        - paragraph [ref=e485]: Konfigurasi aplikasi
+      - generic [ref=e486]:
+        - heading "Info Aplikasi" [level=3] [ref=e488]
+        - generic [ref=e489]:
+          - generic [ref=e490]:
+            - generic [ref=e491]: "Mode:"
+            - generic [ref=e492]: Demo (localStorage)
+          - generic [ref=e493]:
+            - generic [ref=e494]: "Storage:"
+            - generic [ref=e495]: 3.5 KB
+          - generic [ref=e496]:
+            - generic [ref=e497]: "User saat ini:"
+            - generic [ref=e498]: Administrator (ADMIN)
+          - generic [ref=e499]:
+            - generic [ref=e500]: "Jumlah transaksi:"
+            - generic [ref=e501]: "30"
+          - generic [ref=e502]:
+            - generic [ref=e503]: "Jumlah user:"
+            - generic [ref=e504]: "2"
+      - generic [ref=e505]:
+        - heading "Reset Data" [level=3] [ref=e507]
+        - paragraph [ref=e508]: Hapus semua data dan mulai ulang dari awal.
+        - button "Reset Semua Data" [ref=e509] [cursor=pointer]
+      - generic [ref=e510]:
+        - heading "Peringatan Keamanan" [level=3] [ref=e512]
+        - generic [ref=e513]:
+          - paragraph [ref=e514]: Sistem login ini menggunakan localStorage untuk DEMO. Tidak aman untuk production.
+          - paragraph [ref=e515]: "Untuk production: gunakan backend server, database, password hashing (bcrypt), dan token/session yang aman."

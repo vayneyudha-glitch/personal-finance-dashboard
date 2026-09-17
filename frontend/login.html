@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login — FinancePro</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+    <div class="auth-page">
+        <div class="auth-card">
+            <div class="auth-header">
+                <a href="index.html" class="auth-logo">
+                    <span class="logo-icon">&#x1F4B0;</span>
+                    <span>FinancePro</span>
+                </a>
+                <h1>Welcome Back</h1>
+                <p>Login to access your dashboard</p>
+            </div>
+
+            <form id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <label for="loginIdentifier">Email or Phone Number</label>
+                    <input type="text" id="loginIdentifier" placeholder="you@example.com or 08123456789" autocomplete="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="loginPassword" placeholder="Enter your password" autocomplete="current-password" required>
+                        <button type="button" class="password-toggle" id="passwordToggle">&#x1F441;</button>
+                    </div>
+                </div>
+                <div class="auth-error" id="loginError" style="display:none;"></div>
+                <button type="submit" class="btn btn-primary btn-block btn-lg">Login</button>
+            </form>
+
+            <div class="auth-footer">
+                <p>Don't have an account? <a href="register.html" class="auth-link">Register here</a></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/components.js"></script>
+    <script>
+        // Redirect if already logged in
+        if (isLoggedIn()) {
+            window.location.href = isAdmin() ? 'admin.html' : 'dashboard.html';
+        }
+
+        function showLoginError(msg) {
+            var el = document.getElementById('loginError');
+            el.textContent = msg;
+            el.style.display = 'block';
+        }
+
+        function clearLoginError() {
+            var el = document.getElementById('loginError');
+            el.textContent = '';
+            el.style.display = 'none';
+        }
+
+        // Password toggle
+        document.getElementById('passwordToggle').addEventListener('click', function() {
+            var input = document.getElementById('loginPassword');
+            input.type = input.type === 'password' ? 'text' : 'password';
+            this.textContent = input.type === 'password' ? '\uD83D\uDC41' : '\uD83D\uDE48';
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            clearLoginError();
+
+            var identifier = document.getElementById('loginIdentifier').value.trim();
+            var password = document.getElementById('loginPassword').value;
+
+            if (!identifier || !password) {
+                showLoginError('Please fill in all fields.');
+                return;
+            }
+
+            var btn = this.querySelector('button[type="submit"]');
+            btn.disabled = true;
+            btn.textContent = 'Loading...';
+
+            var result = await AuthAPI.login(identifier, password);
+
+            btn.disabled = false;
+            btn.textContent = 'Login';
+
+            if (!result.ok) {
+                showLoginError(result.data.message || 'Login failed.');
+                return;
+            }
+
+            showToast('Login successful!', 'success');
+            var session = getSession();
+            setTimeout(function() {
+                window.location.href = session && session.role === 'ADMIN' ? 'admin.html' : 'dashboard.html';
+            }, 500);
+        });
+    </script>
+</body>
+</html>

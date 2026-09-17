@@ -1,0 +1,56 @@
+- generic [ref=e1]:
+  - complementary [ref=e2]:
+    - generic [ref=e3]:
+      - heading "Finance" [level=2] [ref=e4]
+      - paragraph [ref=e5]: Personal Dashboard
+    - navigation [ref=e6]:
+      - button "Dashboard" [ref=e7] [cursor=pointer]
+      - button "Transaksi" [ref=e8] [cursor=pointer]
+      - button "Analisis" [ref=e9] [cursor=pointer]
+    - generic [ref=e10]:
+      - button "+ Tambah Transaksi" [active] [ref=e11] [cursor=pointer]
+      - button "Hapus Semua Data" [ref=e12] [cursor=pointer]
+  - main [ref=e13]:
+    - generic [ref=e409]:
+      - generic [ref=e410]:
+        - heading "Analisis" [level=1] [ref=e411]
+        - paragraph [ref=e412]: Visualisasi data keuangan Anda
+      - generic [ref=e413]:
+        - heading "Kategori Pengeluaran Terbesar" [level=3] [ref=e415]
+        - generic [ref=e416]:
+          - paragraph [ref=e417]: Makanan
+          - paragraph [ref=e418]: Rp 2.320.000
+      - heading "Pemasukan vs Pengeluaran (Bulanan)" [level=3] [ref=e421]
+      - heading "Pengeluaran Berdasarkan Kategori" [level=3] [ref=e426]
+      - heading "Transaksi Berdasarkan Bulan" [level=3] [ref=e431]
+  - generic [ref=e435]:
+    - generic [ref=e436]:
+      - heading "Tambah Transaksi" [level=3] [ref=e437]
+      - button "X" [ref=e438] [cursor=pointer]
+    - generic [ref=e439]:
+      - generic [ref=e440]:
+        - generic [ref=e441]: Tanggal
+        - textbox "Tanggal" [ref=e442]: 2026-09-15
+      - generic [ref=e443]:
+        - generic [ref=e444]: Jenis
+        - combobox "Jenis" [ref=e445]:
+          - option "Income (Pemasukan)" [selected]
+          - option "Expense (Pengeluaran)"
+      - generic [ref=e446]:
+        - generic [ref=e447]: Kategori
+        - combobox "Kategori" [ref=e448]:
+          - option "Gaji" [selected]
+          - option "Bonus"
+          - option "Investasi"
+          - option "Freelance"
+          - option "Lainnya"
+      - generic [ref=e449]:
+        - generic [ref=e450]: Deskripsi
+        - textbox "Deskripsi" [ref=e451]:
+          - /placeholder: "Contoh: Gaji bulanan"
+      - generic [ref=e452]:
+        - generic [ref=e453]: Nominal (Rp)
+        - spinbutton "Nominal (Rp)" [ref=e454]
+      - generic [ref=e455]:
+        - button "Batal" [ref=e456] [cursor=pointer]
+        - button "Simpan" [ref=e457] [cursor=pointer]

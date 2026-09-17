@@ -1,0 +1,52 @@
+- generic [active] [ref=e1]:
+  - complementary [ref=e2]:
+    - generic [ref=e3]:
+      - heading "Finance" [level=2] [ref=e4]
+      - paragraph [ref=e5]: Personal Dashboard
+    - navigation [ref=e6]:
+      - button "Dashboard" [ref=e7] [cursor=pointer]
+      - button "Transaksi" [ref=e8] [cursor=pointer]
+      - button "Analisis" [ref=e9] [cursor=pointer]
+    - generic [ref=e10]:
+      - button "+ Tambah Transaksi" [ref=e11] [cursor=pointer]
+      - button "Hapus Semua Data" [ref=e12] [cursor=pointer]
+  - main [ref=e13]:
+    - generic [ref=e14]:
+      - generic [ref=e15]:
+        - heading "Dashboard" [level=1] [ref=e16]
+        - paragraph [ref=e17]: Ringkasan keuangan Anda
+      - generic [ref=e18]:
+        - generic [ref=e19]:
+          - generic [ref=e20]: Income
+          - paragraph [ref=e21]: Total Pemasukan
+          - heading "Rp 30.500.000" [level=3] [ref=e22]
+        - generic [ref=e23]:
+          - generic [ref=e24]: Expense
+          - paragraph [ref=e25]: Total Pengeluaran
+          - heading "Rp 7.650.000" [level=3] [ref=e26]
+        - generic [ref=e27]:
+          - generic [ref=e28]: Balance
+          - paragraph [ref=e29]: Saldo
+          - heading "Rp 22.850.000" [level=3] [ref=e30]
+        - generic [ref=e31]:
+          - generic [ref=e32]: Count
+          - paragraph [ref=e33]: Jumlah Transaksi
+          - heading "30" [level=3] [ref=e34]
+      - generic [ref=e35]:
+        - generic [ref=e36]:
+          - heading "Ringkasan Bulan Berjalan" [level=3] [ref=e37]
+          - generic [ref=e38]: September 2026
+        - generic [ref=e39]:
+          - generic [ref=e40]:
+            - paragraph [ref=e41]: Pemasukan Bulan Ini
+            - paragraph [ref=e42]: Rp 2.000.000
+          - generic [ref=e43]:
+            - paragraph [ref=e44]: Pengeluaran Bulan Ini
+            - paragraph [ref=e45]: Rp 1.850.000
+          - generic [ref=e46]:
+            - paragraph [ref=e47]: Saldo Bulan Ini
+            - paragraph [ref=e48]: Rp 150.000
+          - generic [ref=e49]:
+            - paragraph [ref=e50]: Transaksi Bulan Ini
+            - paragraph [ref=e51]: "9"
+      - heading "Grafik Pemasukan vs Pengeluaran" [level=3] [ref=e54]

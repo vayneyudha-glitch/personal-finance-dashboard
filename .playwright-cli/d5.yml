@@ -1,0 +1,39 @@
+- generic [ref=e1]:
+  - complementary [ref=e2]:
+    - generic [ref=e3]:
+      - heading "Finance" [level=2] [ref=e4]
+      - paragraph [ref=e5]: Personal Dashboard
+    - navigation [ref=e6]:
+      - button "Dashboard" [ref=e7] [cursor=pointer]
+      - button "Transaksi" [ref=e8] [cursor=pointer]
+      - button "Analisis" [ref=e9] [cursor=pointer]
+    - generic [ref=e10]:
+      - button "+ Tambah Transaksi" [ref=e11] [cursor=pointer]
+      - button "Hapus Semua Data" [active] [ref=e12] [cursor=pointer]
+  - main [ref=e13]:
+    - generic [ref=e409]:
+      - generic [ref=e410]:
+        - heading "Analisis" [level=1] [ref=e411]
+        - paragraph [ref=e412]: Visualisasi data keuangan Anda
+      - generic [ref=e413]:
+        - heading "Kategori Pengeluaran Terbesar" [level=3] [ref=e415]
+        - generic [ref=e416]:
+          - paragraph [ref=e417]: Makanan
+          - paragraph [ref=e418]: Rp 2.320.000
+      - heading "Pemasukan vs Pengeluaran (Bulanan)" [level=3] [ref=e421]
+      - heading "Pengeluaran Berdasarkan Kategori" [level=3] [ref=e426]
+      - heading "Transaksi Berdasarkan Bulan" [level=3] [ref=e431]
+  - generic [ref=e461]:
+    - generic [ref=e462]:
+      - heading "Konfirmasi" [level=3] [ref=e463]
+      - button "X" [ref=e464] [cursor=pointer]
+    - generic [ref=e465]:
+      - paragraph [ref=e466]:
+        - text: Yakin ingin menghapus
+        - strong [ref=e467]: semua data
+        - text: transaksi?
+      - paragraph [ref=e468]: Tindakan ini tidak dapat dibatalkan.
+    - generic [ref=e469]:
+      - button "Batal" [ref=e470] [cursor=pointer]
+      - button "Ya, Hapus Semua" [ref=e471] [cursor=pointer]
+  - generic [ref=e57]: Transaksi berhasil ditambahkan!

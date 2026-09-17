@@ -1,0 +1,73 @@
+- generic [ref=e22]:
+  - complementary [ref=e23]:
+    - generic [ref=e24]:
+      - heading "Finance" [level=2] [ref=e25]
+      - paragraph [ref=e26]: Personal Dashboard
+    - generic [ref=e27]:
+      - paragraph [ref=e28]: Administrator
+      - paragraph [ref=e29]: Administrator
+    - navigation [ref=e30]:
+      - button "Dashboard" [ref=e31] [cursor=pointer]
+      - button "Transactions" [ref=e32] [cursor=pointer]
+      - button "Analytics" [ref=e33] [cursor=pointer]
+      - button "Categories" [ref=e34] [cursor=pointer]
+      - button "Budget" [ref=e35] [cursor=pointer]
+      - button "Users" [active] [ref=e36] [cursor=pointer]
+      - button "Import / Export" [ref=e37] [cursor=pointer]
+      - button "Settings" [ref=e38] [cursor=pointer]
+    - generic [ref=e39]:
+      - button "+ Tambah Transaksi" [ref=e40] [cursor=pointer]
+      - button "Export CSV" [ref=e41] [cursor=pointer]
+      - button "Import CSV" [ref=e42] [cursor=pointer]
+      - button "Hapus Semua Data" [ref=e43] [cursor=pointer]
+      - button "Logout" [ref=e44] [cursor=pointer]
+  - button "Ganti tema" [ref=e46] [cursor=pointer]: 🌙
+  - main [ref=e47]:
+    - generic [ref=e433]:
+      - generic [ref=e434]:
+        - heading "Kelola User" [level=1] [ref=e435]
+        - paragraph [ref=e436]: Tambah, hapus, dan atur role pengguna
+      - generic [ref=e437]:
+        - heading "Tambah User Baru" [level=3] [ref=e439]
+        - generic [ref=e440]:
+          - generic [ref=e441]:
+            - generic [ref=e442]:
+              - generic [ref=e443]: Email
+              - textbox "Email" [ref=e444]:
+                - /placeholder: user@example.com
+            - generic [ref=e445]:
+              - generic [ref=e446]: Nama
+              - textbox "Nama" [ref=e447]:
+                - /placeholder: Nama lengkap
+            - generic [ref=e448]:
+              - generic [ref=e449]: Password
+              - textbox "Password" [ref=e450]
+            - generic [ref=e451]:
+              - generic [ref=e452]: Role
+              - combobox "Role" [ref=e453]:
+                - option "USER" [selected]
+                - option "ADMIN"
+          - button "Tambah User" [ref=e454] [cursor=pointer]
+      - generic [ref=e455]:
+        - heading "Daftar User" [level=3] [ref=e457]
+        - table [ref=e459]:
+          - rowgroup [ref=e460]:
+            - row [ref=e461]:
+              - columnheader "Email" [ref=e462]
+              - columnheader "Nama" [ref=e463]
+              - columnheader "Role" [ref=e464]
+              - columnheader "Aksi" [ref=e465]
+          - rowgroup [ref=e466]:
+            - row [ref=e467]:
+              - cell "admin@finance.demo" [ref=e468]
+              - cell "Administrator" [ref=e469]
+              - cell "ADMIN" [ref=e470]
+              - cell "You" [ref=e471]
+            - row [ref=e474]:
+              - cell "user@finance.demo" [ref=e475]
+              - cell "Demo User" [ref=e476]
+              - cell "USER" [ref=e477]
+              - cell [ref=e478]:
+                - generic [ref=e479]:
+                  - button "Jadikan ADMIN" [ref=e480] [cursor=pointer]
+                  - button "Hapus" [ref=e481] [cursor=pointer]

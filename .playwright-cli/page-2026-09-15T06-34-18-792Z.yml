@@ -1,0 +1,100 @@
+- generic [ref=e22]:
+  - complementary [ref=e23]:
+    - generic [ref=e24]:
+      - heading "Finance" [level=2] [ref=e25]
+      - paragraph [ref=e26]: Personal Dashboard
+    - generic [ref=e27]:
+      - paragraph [ref=e28]: Administrator
+      - paragraph [ref=e29]: Administrator
+    - navigation [ref=e30]:
+      - button "Dashboard" [ref=e31] [cursor=pointer]
+      - button "Transactions" [ref=e32] [cursor=pointer]
+      - button "Analytics" [ref=e33] [cursor=pointer]
+      - button "Categories" [ref=e34] [cursor=pointer]
+      - button "Budget" [ref=e35] [cursor=pointer]
+      - button "Users" [ref=e36] [cursor=pointer]
+      - button "Import / Export" [ref=e37] [cursor=pointer]
+      - button "Settings" [ref=e38] [cursor=pointer]
+    - generic [ref=e39]:
+      - button "+ Tambah Transaksi" [ref=e40] [cursor=pointer]
+      - button "Export CSV" [ref=e41] [cursor=pointer]
+      - button "Import CSV" [ref=e42] [cursor=pointer]
+      - button "Hapus Semua Data" [ref=e43] [cursor=pointer]
+      - button "Logout" [ref=e44] [cursor=pointer]
+  - button "Ganti tema" [active] [ref=e46] [cursor=pointer]: ☀
+  - main [ref=e47]:
+    - generic [ref=e516]:
+      - generic [ref=e517]:
+        - heading "Kelola Kategori" [level=1] [ref=e518]
+        - paragraph [ref=e519]: Tambah, edit, atau hapus kategori transaksi
+      - generic [ref=e520]:
+        - heading "Tambah Kategori Baru" [level=3] [ref=e522]
+        - generic [ref=e523]:
+          - combobox [ref=e524]:
+            - option "Income" [selected]
+            - option "Expense"
+          - textbox "Nama kategori..." [ref=e525]
+          - button "Tambah" [ref=e526] [cursor=pointer]
+      - generic [ref=e527]:
+        - heading "Daftar Kategori" [level=3] [ref=e529]
+        - generic [ref=e530]:
+          - generic [ref=e531]:
+            - generic [ref=e532]: Gaji
+            - generic [ref=e533]:
+              - text: Pemasukan
+              - button "Hapus" [ref=e534] [cursor=pointer]
+          - generic [ref=e535]:
+            - generic [ref=e536]: Bonus
+            - generic [ref=e537]:
+              - text: Pemasukan
+              - button "Hapus" [ref=e538] [cursor=pointer]
+          - generic [ref=e539]:
+            - generic [ref=e540]: Investasi
+            - generic [ref=e541]:
+              - text: Pemasukan
+              - button "Hapus" [ref=e542] [cursor=pointer]
+          - generic [ref=e543]:
+            - generic [ref=e544]: Freelance
+            - generic [ref=e545]:
+              - text: Pemasukan
+              - button "Hapus" [ref=e546] [cursor=pointer]
+          - generic [ref=e547]:
+            - generic [ref=e548]: Lainnya
+            - generic [ref=e549]:
+              - text: Pemasukan
+              - button "Hapus" [ref=e550] [cursor=pointer]
+          - generic [ref=e551]:
+            - generic [ref=e552]: Makanan
+            - generic [ref=e553]:
+              - text: Pengeluaran
+              - button "Hapus" [ref=e554] [cursor=pointer]
+          - generic [ref=e555]:
+            - generic [ref=e556]: Transportasi
+            - generic [ref=e557]:
+              - text: Pengeluaran
+              - button "Hapus" [ref=e558] [cursor=pointer]
+          - generic [ref=e559]:
+            - generic [ref=e560]: Belanja
+            - generic [ref=e561]:
+              - text: Pengeluaran
+              - button "Hapus" [ref=e562] [cursor=pointer]
+          - generic [ref=e563]:
+            - generic [ref=e564]: Hiburan
+            - generic [ref=e565]:
+              - text: Pengeluaran
+              - button "Hapus" [ref=e566] [cursor=pointer]
+          - generic [ref=e567]:
+            - generic [ref=e568]: Tagihan
+            - generic [ref=e569]:
+              - text: Pengeluaran
+              - button "Hapus" [ref=e570] [cursor=pointer]
+          - generic [ref=e571]:
+            - generic [ref=e572]: Kesehatan
+            - generic [ref=e573]:
+              - text: Pengeluaran
+              - button "Hapus" [ref=e574] [cursor=pointer]
+          - generic [ref=e575]:
+            - generic [ref=e576]: Lainnya
+            - generic [ref=e577]:
+              - text: Pengeluaran
+              - button "Hapus" [ref=e578] [cursor=pointer]
