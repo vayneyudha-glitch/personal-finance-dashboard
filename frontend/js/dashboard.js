@@ -3,6 +3,7 @@
    ============================================================ */
 
 requireAuth();
+initProtectedPageGuard();
 renderSidebar('dashboard');
 initSidebarMobile();
 initThemeToggle();

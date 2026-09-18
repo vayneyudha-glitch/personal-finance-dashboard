@@ -11,7 +11,8 @@ const registerRules = [
     body('confirmPassword').custom((value, { req }) => {
         if (value !== req.body.password) throw new Error('Passwords do not match');
         return true;
-    })
+    }),
+    body('phoneVerified').optional().isBoolean().withMessage('phoneVerified must be boolean')
 ];
 
 const loginRules = [
@@ -26,4 +27,25 @@ const profileUpdateRules = [
     body('newPassword').optional().isLength({ min: 8 }).withMessage('New password must be at least 8 characters')
 ];
 
-module.exports = { registerRules, loginRules, profileUpdateRules };
+// OTP send validation — email is required (OTP sent via email only)
+const otpSendRules = [
+    body('phone').trim().notEmpty().withMessage('Phone number is required'),
+    body('name').optional().trim(),
+    body('email').trim().notEmpty().withMessage('Email is required').isEmail().withMessage('Invalid email format')
+];
+
+// OTP verify validation — email is required to identify the OTP record
+const otpVerifyRules = [
+    body('phone').trim().notEmpty().withMessage('Phone number is required'),
+    body('email').optional().trim().isEmail().withMessage('Invalid email format'),
+    body('code').trim().notEmpty().withMessage('Verification code is required')
+        .isLength({ min: 6, max: 6 }).withMessage('Code must be 6 digits')
+];
+
+module.exports = {
+    registerRules,
+    loginRules,
+    profileUpdateRules,
+    otpSendRules,
+    otpVerifyRules
+};

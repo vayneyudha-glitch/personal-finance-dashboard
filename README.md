@@ -198,8 +198,228 @@ Login at `http://localhost:8080/login.html`.
 
 - Open `http://localhost:8080/register.html`
 - Fill in: Name, Email, Phone, Password, Confirm Password
+- Click "Kirim Kode Verifikasi" to send an OTP to the phone number
+- Enter the 6-digit OTP code and click "Verifikasi"
+- After phone is verified, click "Verifikasi & Daftar" to complete registration
 - All new registrations are automatically assigned `USER` role
 - Users cannot choose or change their role
+- Only accounts with `phone_verified = true` can login (admin is exempt)
+
+## WhatsApp OTP Setup
+
+The system supports pluggable OTP delivery providers. The provider is selected via `OTP_PROVIDER` in `backend/.env`.
+
+### Providers
+
+| Provider | `OTP_PROVIDER` | Use Case |
+|----------|---------------|----------|
+| Console  | `console`     | Development — prints OTP to server terminal |
+| WhatsApp | `whatsapp`    | Production — sends OTP via WhatsApp Business Cloud API |
+| SMS      | `sms`         | Placeholder for future SMS gateway |
+
+### Console Provider (Development)
+
+Default mode. No credentials needed.
+
+```env
+OTP_PROVIDER=console
+NODE_ENV=development
+```
+
+The OTP code is printed to the backend terminal (never sent to the browser).
+
+### WhatsApp Provider (Production)
+
+Uses the official **WhatsApp Business Cloud API** by Meta.
+
+**Official documentation:** https://developers.facebook.com/docs/whatsapp/cloud-api
+
+#### Step 1: Get Meta Credentials
+
+1. Create a **Meta Business account** at https://business.facebook.com
+2. Go to **Meta for Developers** → create an app → add **WhatsApp** product
+3. Add a **phone number** to your WhatsApp Business portfolio
+4. Copy the **Phone Number ID**
+5. Create a **System User** and generate a **permanent access token**
+6. Create a **message template** with a body parameter `{{1}}` for the OTP code. Example template body:
+   ```
+   Your FinancePro verification code is {{1}}. This code expires in 5 minutes. Do not share it with anyone.
+   ```
+7. Submit the template for approval (Meta must approve it before use)
+8. Note the **template name** and **language code** (e.g. `id` for Indonesian, `en` for English)
+
+#### Step 2: Configure backend/.env
+
+```env
+OTP_PROVIDER=whatsapp
+NODE_ENV=production
+
+WHATSAPP_API_URL=https://graph.facebook.com/v21.0
+WHATSAPP_API_TOKEN=your_access_token_here
+WHATSAPP_PHONE_NUMBER_ID=your_phone_number_id_here
+WHATSAPP_TEMPLATE_NAME=your_template_name_here
+WHATSAPP_TEMPLATE_LANGUAGE=id
+```
+
+> **IMPORTANT**: Never commit real tokens to Git. The `.env` file is gitignored. If credentials were accidentally committed, **rotate/revoke them immediately** in Meta Business Manager.
+
+#### Step 3: Test
+
+1. Start the backend: `cd backend && npm run dev`
+2. Open `http://localhost:8080/register.html`
+3. Enter a real phone number and click "Kirim Kode Verifikasi"
+4. Check the phone for a WhatsApp message with the OTP code
+5. Enter the code and verify
+
+If the WhatsApp provider fails (HTTP 4xx/5xx, timeout, or misconfiguration), the API returns:
+```json
+{ "success": false, "message": "Gagal mengirim kode verifikasi. Silakan coba lagi." }
+```
+The backend rolls back the OTP data so the user can retry cleanly.
+
+### Switching Providers
+
+Edit `backend/.env`:
+
+```env
+# Development (OTP printed to terminal)
+OTP_PROVIDER=console
+
+# Production (OTP sent via WhatsApp)
+OTP_PROVIDER=whatsapp
+```
+
+Restart the backend after changing.
+
+### Error Handling
+
+| Scenario | Behavior |
+|----------|----------|
+| WhatsApp credentials missing | API returns 502, logs error to backend terminal (no credentials exposed) |
+| WhatsApp API returns 400/401/403 | API returns 502, logs sanitized error |
+| WhatsApp API returns 429 (rate limited) | API returns 502, logs HTTP status |
+| WhatsApp API returns 500 | API returns 502, logs HTTP status |
+| Request timeout (15s) | API returns 502, logs timeout |
+| Success | API returns 200 with confirmation |
+
+### Security
+
+- OTP is **never** returned in API responses
+- OTP is **never** logged when using the WhatsApp provider
+- API tokens are **never** sent to the frontend
+- API tokens are **never** logged
+- Phone numbers are **masked** in logs (e.g. `+6281******90`)
+- OTP is **SHA-256 hashed** before database storage
+- OTP expires in **5 minutes**
+- OTP is **one-time use** — cleared after successful verification
+- Maximum **5 verification attempts**
+- Cooldown of **60 seconds** between OTP sends
+- Rate limiting active on `/api/otp/send` and `/api/otp/verify`
+
+## WhatsApp Webhook Setup
+
+The backend includes a Meta WhatsApp Cloud API webhook receiver at `/api/webhooks/whatsapp`. This allows the backend to receive real-time events from WhatsApp (incoming messages, delivery statuses, errors).
+
+**Official documentation:** https://developers.facebook.com/docs/whatsapp/cloud-api/webhooks
+
+### Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/webhooks/whatsapp` | Meta webhook verification (hub.mode, hub.verify_token, hub.challenge) |
+| POST | `/api/webhooks/whatsapp` | Receive webhook events (messages, statuses, errors) |
+
+### Security
+
+- **GET verification** uses constant-time token comparison (`crypto.timingSafeEqual`) to prevent timing attacks
+- **POST events** are validated via `X-Hub-Signature-256` HMAC-SHA256 using `WHATSAPP_APP_SECRET`
+- Raw request body is preserved for signature verification (custom middleware runs before `express.json()`)
+- If signature is invalid → HTTP 403, event is not processed
+- Verification token and app secret come from `.env`, never hardcoded or exposed
+- Webhook responds `200 OK` immediately to Meta, then processes events asynchronously
+- Phone numbers are **masked** in logs (e.g. `+6281******90`)
+- Message content is **never logged** (could contain OTP or PII)
+- API tokens are **never logged** or sent to the client
+
+### Environment Variables
+
+```env
+# Webhook verification token — YOU choose this, set the same in Meta Dashboard
+WHATSAPP_WEBHOOK_VERIFY_TOKEN=your_random_verify_token_here
+
+# App Secret from Meta App Dashboard → App Settings → Basic
+WHATSAPP_APP_SECRET=your_meta_app_secret_here
+```
+
+### Step 1: Get App Secret
+
+1. Go to **Meta App Dashboard** → your app → **App Settings** → **Basic**
+2. Copy the **App Secret** value
+3. Set it in `backend/.env`:
+   ```env
+   WHATSAPP_APP_SECRET=your_copied_app_secret
+   ```
+
+### Step 2: Set Webhook Verify Token
+
+1. Generate a random string (e.g. `openssl rand -hex 32`)
+2. Set it in `backend/.env`:
+   ```env
+   WHATSAPP_WEBHOOK_VERIFY_TOKEN=your_random_token
+   ```
+
+### Step 3: Configure Webhook in Meta Dashboard
+
+1. Go to **WhatsApp** → **Configuration** in your Meta App
+2. Set **Callback URL** to your public URL:
+   ```
+   https://your-domain.com/api/webhooks/whatsapp
+   ```
+3. Set **Verify Token** to the exact same value as `WHATSAPP_WEBHOOK_VERIFY_TOKEN`
+4. Click **Verify and Save** — Meta sends a GET request; backend responds with `hub.challenge`
+5. Subscribe to fields: `messages`, `message_statuses` (and others as needed)
+
+### Step 4: Expose Backend Publicly (Development)
+
+For local development, use a tunnel to expose `localhost:3000`:
+
+```bash
+# Option A: ngrok
+ngrok http 3000
+# Use the https URL as: https://<ngrok-id>.ngrok.io/api/webhooks/whatsapp
+
+# Option B: Cloudflare Tunnel
+cloudflared tunnel --url http://localhost:3000
+```
+
+### Step 5: Test
+
+1. Start backend: `cd backend && npm run dev`
+2. With tunnel running, configure the callback URL in Meta Dashboard
+3. Click "Verify and Save" — should succeed
+4. Send a WhatsApp message to your test number
+5. Check backend terminal for `[Webhook/Message]` log entries
+
+### Event Types Handled
+
+| Field | Description | Logging |
+|-------|-------------|---------|
+| `messages` | Incoming messages from users | Sender (masked), type, msg ID, timestamp. Content NOT logged. |
+| `statuses` | Delivery receipts (sent/delivered/read/failed) | Recipient (masked), status, msg ID. Conversation & pricing metadata. |
+| `errors` | Webhook-level errors | Error code, title, message. |
+| Unknown | Unsupported/future events | Field name + messaging product logged, no crash. |
+
+### Error Handling
+
+| Scenario | Behavior |
+|----------|----------|
+| Missing verify token in .env | GET returns 500, POST returns 403 |
+| Verify token mismatch | GET returns 403 |
+| App secret not configured | POST returns 403 |
+| Signature invalid | POST returns 403, event not processed |
+| Malformed JSON | POST returns 200 (acknowledged), error logged |
+| Unknown event type | POST returns 200, event logged, no crash |
+| Large payload (>2MB) | Returns 413, connection destroyed |
 
 ## API Reference
 

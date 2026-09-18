@@ -3,6 +3,7 @@
    ============================================================ */
 
 requireAuth();
+initProtectedPageGuard();
 renderSidebar('budgets');
 initSidebarMobile();
 initThemeToggle();

@@ -47,7 +47,10 @@ function debounce(fn, delay) {
         timer = setTimeout(function() { fn.apply(context, args); }, delay || 300);
     };
 }
-/* Authentication helpers */
+/* Authentication helpers — delegated to auth.js for full implementation.
+   These are kept here so that pages that only load utils.js + api.js
+   (e.g. login/register) still have basic session helpers available.
+   If auth.js is loaded after utils.js, its richer versions take precedence. */
 function getSession() {
     var session = localStorage.getItem(AUTH_KEYS.SESSION);
     if (!session) return null;
@@ -72,11 +75,15 @@ function isAdmin() {
 function doLogout() {
     if (typeof AuthAPI !== 'undefined' && AuthAPI.logout) {
         AuthAPI.logout().finally(function() {
-            window.location.href = 'login.html';
+            clearToken();
+            localStorage.removeItem(AUTH_KEYS.SESSION);
+            window.history.replaceState({ loggedOut: true }, '', 'login.html');
+            window.location.replace('login.html');
         });
     } else {
         clearToken();
         localStorage.removeItem(AUTH_KEYS.SESSION);
-        window.location.href = 'login.html';
+        window.history.replaceState({ loggedOut: true }, '', 'login.html');
+        window.location.replace('login.html');
     }
 }

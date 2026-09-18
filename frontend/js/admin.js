@@ -3,6 +3,7 @@
    ============================================================ */
 
 requireAdmin();
+initProtectedPageGuard();
 renderSidebar('admin');
 initSidebarMobile();
 initThemeToggle();
@@ -373,6 +374,7 @@ async function loadQuickStats() {
 /* === INIT === */
 document.addEventListener('DOMContentLoaded', async function() {
     renderRangeFilter();
+    await loadQuickStats();
 
     // Custom date apply
     var dateApply = document.getElementById('dateApplyBtn');

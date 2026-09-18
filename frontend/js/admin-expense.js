@@ -3,6 +3,7 @@
    ============================================================ */
 
 requireAdmin();
+initProtectedPageGuard();
 renderSidebar('admin-expense');
 initSidebarMobile();
 initThemeToggle();

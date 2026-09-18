@@ -3,6 +3,7 @@
    ============================================================ */
 
 requireAdmin();
+initProtectedPageGuard();
 renderSidebar('admin-reports');
 initSidebarMobile();
 initThemeToggle();

@@ -6,6 +6,7 @@
    ============================================================ */
 
 requireAdmin();
+initProtectedPageGuard();
 renderSidebar('admin-data-analysis');
 initSidebarMobile();
 initThemeToggle();

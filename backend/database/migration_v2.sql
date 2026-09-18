@@ -76,9 +76,31 @@ INSERT IGNORE INTO system_settings (setting_key, setting_value, description) VAL
 
 -- ============================================================
 --  ADDITIONAL INDEXES for performance (non-breaking)
+--  Note: MySQL < 8.0.29 doesn't support "CREATE INDEX IF NOT EXISTS"
+--  so we wrap in procedures that check first.
 -- ============================================================
-CREATE INDEX IF NOT EXISTS idx_trx_amount ON transactions(amount);
-CREATE INDEX IF NOT EXISTS idx_trx_created ON transactions(created_at);
-CREATE INDEX IF NOT EXISTS idx_trx_composite ON transactions(user_id, type, transaction_date);
-CREATE INDEX IF NOT EXISTS idx_user_created ON users(created_at);
-CREATE INDEX IF NOT EXISTS idx_log_user_action ON activity_logs(user_id, action);
+DROP PROCEDURE IF EXISTS add_index_if_missing;
+DELIMITER //
+CREATE PROCEDURE add_index_if_exists(IN p_table VARCHAR(64), IN p_index VARCHAR(64), IN p_cols VARCHAR(255))
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.STATISTICS
+        WHERE table_schema = DATABASE()
+          AND table_name = p_table
+          AND index_name = p_index
+    ) THEN
+        SET @sql = CONCAT('CREATE INDEX ', p_index, ' ON ', p_table, ' (', p_cols, ')');
+        PREPARE stmt FROM @sql;
+        EXECUTE stmt;
+        DEALLOCATE PREPARE stmt;
+    END IF;
+END //
+DELIMITER ;
+
+CALL add_index_if_exists('transactions', 'idx_trx_amount', 'amount');
+CALL add_index_if_exists('transactions', 'idx_trx_created', 'created_at');
+CALL add_index_if_exists('transactions', 'idx_trx_composite', 'user_id, type, transaction_date');
+CALL add_index_if_exists('users', 'idx_user_created', 'created_at');
+CALL add_index_if_exists('activity_logs', 'idx_log_user_action', 'user_id, action');
+
+DROP PROCEDURE IF EXISTS add_index_if_exists;

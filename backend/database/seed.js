@@ -83,16 +83,178 @@ async function initDatabase() {
         process.exit(1);
     }
 
-    // --- Step 2b: Execute migration_v2.sql (analytics upgrade) ---
+    // --- Step 2b: Migration v2 (budgets, alerts, settings, indexes) ---
+    // Execute only the CREATE TABLE IF NOT EXISTS parts (safe for re-runs)
     try {
-        const migrationPath = path.join(__dirname, 'migration_v2.sql');
-        if (fs.existsSync(migrationPath)) {
-            const migrationSql = fs.readFileSync(migrationPath, 'utf8');
-            await connection.query(migrationSql);
-            console.log('      Migration v2 (budgets, alerts, settings) applied');
+        await connection.query(`USE ${dbName}`);
+
+        // budgets
+        await connection.query(`
+            CREATE TABLE IF NOT EXISTS budgets (
+                id              INT AUTO_INCREMENT PRIMARY KEY,
+                user_id         INT NOT NULL,
+                category_id     INT,
+                amount          DECIMAL(15,2) NOT NULL,
+                period          ENUM('monthly','weekly','yearly') NOT NULL DEFAULT 'monthly',
+                start_date      DATE NOT NULL,
+                end_date        DATE,
+                status          ENUM('ACTIVE','INACTIVE') NOT NULL DEFAULT 'ACTIVE',
+                created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+                FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL,
+                INDEX idx_budget_user (user_id),
+                INDEX idx_budget_category (category_id),
+                INDEX idx_budget_period (period),
+                INDEX idx_budget_dates (start_date, end_date)
+            ) ENGINE=InnoDB;
+        `);
+
+        // alerts
+        await connection.query(`
+            CREATE TABLE IF NOT EXISTS alerts (
+                id              INT AUTO_INCREMENT PRIMARY KEY,
+                user_id         INT,
+                type            VARCHAR(50) NOT NULL,
+                severity        ENUM('INFO','WARNING','CRITICAL') NOT NULL DEFAULT 'INFO',
+                title           VARCHAR(200) NOT NULL,
+                message         VARCHAR(500) NOT NULL,
+                is_read         BOOLEAN NOT NULL DEFAULT FALSE,
+                created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+                INDEX idx_alert_user (user_id),
+                INDEX idx_alert_type (type),
+                INDEX idx_alert_read (is_read),
+                INDEX idx_alert_created (created_at)
+            ) ENGINE=InnoDB;
+        `);
+
+        // system_settings
+        await connection.query(`
+            CREATE TABLE IF NOT EXISTS system_settings (
+                id              INT AUTO_INCREMENT PRIMARY KEY,
+                setting_key     VARCHAR(100) NOT NULL UNIQUE,
+                setting_value   VARCHAR(500),
+                description     VARCHAR(300),
+                updated_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                INDEX idx_setting_key (setting_key)
+            ) ENGINE=InnoDB;
+        `);
+
+        // Default settings
+        await connection.query(`
+            INSERT IGNORE INTO system_settings (setting_key, setting_value, description) VALUES
+                ('currency', 'IDR', 'Default currency code'),
+                ('date_format', 'DD/MM/YYYY', 'Date display format'),
+                ('timezone', 'Asia/Jakarta', 'System timezone'),
+                ('pagination_default', '10', 'Default items per page'),
+                ('transaction_min_amount', '1', 'Minimum transaction amount'),
+                ('transaction_max_amount', '1000000000', 'Maximum transaction amount'),
+                ('budget_warning_threshold', '70', 'Budget warning threshold percentage'),
+                ('budget_critical_threshold', '90', 'Budget critical threshold percentage'),
+                ('large_transaction_threshold', '5000000', 'Large transaction alert threshold'),
+                ('max_login_attempts', '5', 'Max failed login attempts before lockout');
+        `);
+
+        // Add indexes if missing
+        const indexesToAdd = [
+            ['transactions', 'idx_trx_amount', 'amount'],
+            ['transactions', 'idx_trx_created', 'created_at'],
+            ['transactions', 'idx_trx_composite', 'user_id, type, transaction_date'],
+            ['users', 'idx_user_created', 'created_at'],
+            ['activity_logs', 'idx_log_user_action', 'user_id, action']
+        ];
+
+        for (const [table, indexName, cols] of indexesToAdd) {
+            const [idxExists] = await connection.query(
+                `SELECT 1 FROM information_schema.STATISTICS WHERE table_schema = ? AND table_name = ? AND index_name = ?`,
+                [dbName, table, indexName]
+            );
+            if (idxExists.length === 0) {
+                try {
+                    await connection.query(`CREATE INDEX ${indexName} ON ${dbName}.${table} (${cols})`);
+                } catch (e) { /* index might already exist */
+                }
+            }
         }
+
+        console.log('      Migration v2 (budgets, alerts, settings) applied');
     } catch (err) {
         console.error('[WARNING] Migration v2 skipped:', err.message);
+    }
+
+    // --- Step 2c: Migration v4 (phone verification, OTP, token blacklist) ---
+    try {
+        // Add columns if missing
+        const columnsToAdd = [
+            ['phone_verified', 'TINYINT(1) NOT NULL DEFAULT 0'],
+            ['phone_verification_code', 'VARCHAR(255) DEFAULT NULL'],
+            ['phone_verification_expires_at', 'TIMESTAMP NULL DEFAULT NULL'],
+            ['phone_verification_attempts', 'INT NOT NULL DEFAULT 0'],
+            ['phone_verification_last_sent_at', 'TIMESTAMP NULL DEFAULT NULL']
+        ];
+
+        for (const [colName, colDef] of columnsToAdd) {
+            const [colExists] = await connection.query(
+                `SELECT 1 FROM information_schema.COLUMNS WHERE table_schema = ? AND table_name = 'users' AND column_name = ?`,
+                [dbName, colName]
+            );
+            if (colExists.length === 0) {
+                try {
+                    await connection.query(`ALTER TABLE ${dbName}.users ADD COLUMN ${colName} ${colDef}`);
+                } catch (e) { /* column might already exist */ }
+            }
+        }
+
+        // Mark existing users as phone_verified=1
+        await connection.query(`UPDATE ${dbName}.users SET phone_verified = 1 WHERE phone_verified = 0`);
+
+        // Add index if missing
+        const [idxExists] = await connection.query(
+            `SELECT 1 FROM information_schema.STATISTICS WHERE table_schema = ? AND table_name = 'users' AND index_name = 'idx_phone_verified'`,
+            [dbName]
+        );
+        if (idxExists.length === 0) {
+            try {
+                await connection.query(`CREATE INDEX idx_phone_verified ON ${dbName}.users (phone_verified)`);
+            } catch (e) { /* index might already exist */ }
+        }
+
+        // token_blacklist table
+        await connection.query(`
+            CREATE TABLE IF NOT EXISTS ${dbName}.token_blacklist (
+                id              INT AUTO_INCREMENT PRIMARY KEY,
+                token           VARCHAR(500) NOT NULL,
+                user_id         INT,
+                expires_at      TIMESTAMP NOT NULL,
+                created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+                INDEX idx_token (token(255)),
+                INDEX idx_expires (expires_at)
+            ) ENGINE=InnoDB;
+        `);
+
+        // otp_attempts table
+        await connection.query(`
+            CREATE TABLE IF NOT EXISTS ${dbName}.otp_attempts (
+                id              INT AUTO_INCREMENT PRIMARY KEY,
+                phone_number    VARCHAR(20) NOT NULL,
+                attempt_type    ENUM('send','verify') NOT NULL,
+                ip_address      VARCHAR(45),
+                created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                INDEX idx_phone (phone_number),
+                INDEX idx_ip (ip_address),
+                INDEX idx_created (created_at)
+            ) ENGINE=InnoDB;
+        `);
+
+        // Clean up
+        await connection.query(`DELETE FROM ${dbName}.otp_attempts WHERE created_at < DATE_SUB(NOW(), INTERVAL 24 HOUR)`);
+        await connection.query(`DELETE FROM ${dbName}.token_blacklist WHERE expires_at <= NOW()`);
+
+        console.log('      Migration v4 (phone verification, OTP, token blacklist) applied');
+    } catch (err) {
+        console.error('[WARNING] Migration v4 skipped:', err.message);
     }
 
     // --- Step 3: Verify categories ---
@@ -121,8 +283,8 @@ async function initDatabase() {
             const hashedPassword = await bcrypt.hash(adminPassword, 10);
 
             await connection.query(
-                `INSERT INTO ${dbName}.users (name, email, phone, password_hash, role, status)
-                 VALUES (?, ?, NULL, ?, 'ADMIN', 'ACTIVE')`,
+                `INSERT INTO ${dbName}.users (name, email, phone, password_hash, role, status, phone_verified)
+                 VALUES (?, ?, NULL, ?, 'ADMIN', 'ACTIVE', 1)`,
                 ['Administrator', cleanEmail, hashedPassword]
             );
 

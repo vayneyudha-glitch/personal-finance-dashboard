@@ -29,10 +29,21 @@ async function apiRequest(endpoint, options) {
             var data401 = await response.json().catch(function() { return {}; });
             clearToken();
             localStorage.removeItem(AUTH_KEYS.SESSION);
-            if (window.location.pathname.indexOf('dashboard') === -1 && window.location.pathname.indexOf('admin') === -1 && window.location.pathname.indexOf('profile') === -1) {
-                if (typeof showLoginError === 'function') showLoginError(data401.message || 'Session expired');
-            } else {
-                window.location.href = '/frontend/login.html';
+            // Check if we're on a protected page — if so, redirect to login
+            var path = window.location.pathname.toLowerCase();
+            var isProtectedPage = path.indexOf('dashboard') !== -1 ||
+                path.indexOf('admin') !== -1 ||
+                path.indexOf('profile') !== -1 ||
+                path.indexOf('transactions') !== -1 ||
+                path.indexOf('budgets') !== -1 ||
+                path.indexOf('charts') !== -1 ||
+                path.indexOf('import-export') !== -1;
+            if (isProtectedPage) {
+                // Use replace() so Back/Forward button can't return to protected page after session expiry
+                window.history.replaceState({ expired: true }, '', 'login.html');
+                window.location.replace('login.html');
+            } else if (typeof showLoginError === 'function') {
+                showLoginError(data401.message || 'Session expired');
             }
             return { ok: false, data: data401, status: 401 };
         }
@@ -65,8 +76,18 @@ var AuthAPI = {
         return result;
     },
 
-    register: async function(name, email, phone, password, confirmPassword) {
-        var result = await apiRequest('/auth/register', { method: 'POST', body: { name: name, email: email, phone: phone, password: password, confirmPassword: confirmPassword } });
+    register: async function(name, email, phone, password, confirmPassword, phoneVerified) {
+        var result = await apiRequest('/auth/register', {
+            method: 'POST',
+            body: {
+                name: name,
+                email: email,
+                phone: phone,
+                password: password,
+                confirmPassword: confirmPassword,
+                phoneVerified: phoneVerified || false
+            }
+        });
         if (result.ok && result.data.data && result.data.data.token) {
             setToken(result.data.data.token);
             localStorage.setItem(AUTH_KEYS.SESSION, JSON.stringify(result.data.data.user));
@@ -86,6 +107,22 @@ var AuthAPI = {
         await apiRequest('/auth/logout', { method: 'POST' });
         clearToken();
         localStorage.removeItem(AUTH_KEYS.SESSION);
+    }
+};
+
+// OTP API — email verification during registration
+var OTPAPI = {
+    send: async function(phone, name, email) {
+        var body = { phone: phone };
+        if (name) body.name = name;
+        if (email) body.email = email;
+        return await apiRequest('/otp/send', { method: 'POST', body: body });
+    },
+
+    verify: async function(phone, code, email) {
+        var body = { phone: phone, code: code };
+        if (email) body.email = email;
+        return await apiRequest('/otp/verify', { method: 'POST', body: body });
     }
 };
 

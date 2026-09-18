@@ -16,19 +16,25 @@ USE personal_finance;
 --  TABLE: users
 -- ============================================================
 CREATE TABLE IF NOT EXISTS users (
-    id              INT AUTO_INCREMENT PRIMARY KEY,
-    name            VARCHAR(100) NOT NULL,
-    email           VARCHAR(255) NOT NULL,
-    phone           VARCHAR(20),
-    password_hash   VARCHAR(255) NOT NULL,
-    role            ENUM('ADMIN','USER') NOT NULL DEFAULT 'USER',
-    status          ENUM('ACTIVE','INACTIVE') NOT NULL DEFAULT 'ACTIVE',
-    created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    id                              INT AUTO_INCREMENT PRIMARY KEY,
+    name                            VARCHAR(100) NOT NULL,
+    email                           VARCHAR(255) NOT NULL,
+    phone                           VARCHAR(20),
+    password_hash                   VARCHAR(255) NOT NULL,
+    role                            ENUM('ADMIN','USER') NOT NULL DEFAULT 'USER',
+    status                          ENUM('ACTIVE','INACTIVE') NOT NULL DEFAULT 'ACTIVE',
+    phone_verified                  TINYINT(1) NOT NULL DEFAULT 0,
+    phone_verification_code         VARCHAR(255) DEFAULT NULL,
+    phone_verification_expires_at   TIMESTAMP NULL DEFAULT NULL,
+    phone_verification_attempts     INT NOT NULL DEFAULT 0,
+    phone_verification_last_sent_at TIMESTAMP NULL DEFAULT NULL,
+    created_at                      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at                      TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     UNIQUE KEY uk_email (email),
     UNIQUE KEY uk_phone (phone),
     INDEX idx_role (role),
-    INDEX idx_status (status)
+    INDEX idx_status (status),
+    INDEX idx_phone_verified (phone_verified)
 ) ENGINE=InnoDB;
 
 -- ============================================================
@@ -79,6 +85,34 @@ CREATE TABLE IF NOT EXISTS activity_logs (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL,
     INDEX idx_user (user_id),
     INDEX idx_action (action),
+    INDEX idx_created (created_at)
+) ENGINE=InnoDB;
+
+-- ============================================================
+--  TABLE: token_blacklist — JWT invalidation on logout
+-- ============================================================
+CREATE TABLE IF NOT EXISTS token_blacklist (
+    id              INT AUTO_INCREMENT PRIMARY KEY,
+    token           VARCHAR(500) NOT NULL,
+    user_id         INT,
+    expires_at      TIMESTAMP NOT NULL,
+    created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    INDEX idx_token (token(255)),
+    INDEX idx_expires (expires_at)
+) ENGINE=InnoDB;
+
+-- ============================================================
+--  TABLE: otp_attempts — OTP rate limiting tracking
+-- ============================================================
+CREATE TABLE IF NOT EXISTS otp_attempts (
+    id              INT AUTO_INCREMENT PRIMARY KEY,
+    phone_number    VARCHAR(20) NOT NULL,
+    attempt_type    ENUM('send','verify') NOT NULL,
+    ip_address      VARCHAR(45),
+    created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_phone (phone_number),
+    INDEX idx_ip (ip_address),
     INDEX idx_created (created_at)
 ) ENGINE=InnoDB;
 

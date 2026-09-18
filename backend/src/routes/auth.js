@@ -13,19 +13,36 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const pool = require('../config/db');
-const { auth } = require('../middleware/auth');
-const { generateToken } = require('../middleware/auth');
+const { auth, generateToken, blacklistToken } = require('../middleware/auth');
 const { logActivity, getClientIp } = require('../middleware/activityLog');
 const { validate } = require('../middleware/validate');
 const { registerRules, loginRules, profileUpdateRules } = require('../validators/auth');
+const { registerLimiter, loginLimiter } = require('../middleware/rateLimiters');
+const { normalizePhone } = require('../utils/phone');
 
 // POST /api/auth/register
-router.post('/register', registerRules, validate, async (req, res, next) => {
+router.post('/register', registerLimiter, registerRules, validate, async (req, res, next) => {
     try {
-        const { name, email, phone, password } = req.body;
+        const { name, email, phone, password, phoneVerified } = req.body;
 
         const cleanEmail = email.toLowerCase().trim();
-        const cleanPhone = phone.trim();
+        const normalizedPhone = normalizePhone(phone);
+
+        // Validate phone format
+        if (!normalizedPhone) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid phone number format. Please enter a valid Indonesian phone number (e.g. 081234567890).'
+            });
+        }
+
+        // Require phoneVerified = true from OTP flow
+        if (!phoneVerified) {
+            return res.status(400).json({
+                success: false,
+                message: 'Phone number not verified. Please complete OTP verification first.'
+            });
+        }
 
         // Check email uniqueness
         const [emailCheck] = await pool.query('SELECT id FROM users WHERE email = ?', [cleanEmail]);
@@ -34,47 +51,70 @@ router.post('/register', registerRules, validate, async (req, res, next) => {
         }
 
         // Check phone uniqueness
-        const [phoneCheck] = await pool.query('SELECT id FROM users WHERE phone = ?', [cleanPhone]);
-        if (phoneCheck.length > 0) {
-            return res.status(409).json({ success: false, message: 'Phone number already registered.' });
+        const [phoneCheck] = await pool.query('SELECT id, phone_verified FROM users WHERE phone = ?', [normalizedPhone]);
+        if (phoneCheck.length > 0 && phoneCheck[0].phone_verified === 1) {
+            return res.status(409).json({ success: false, message: 'Nomor HP sudah digunakan oleh akun lain.' });
         }
 
         // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Insert — always USER role
-        const [result] = await pool.query(
-            'INSERT INTO users (name, email, phone, password_hash, role, status) VALUES (?, ?, ?, ?, "USER", "ACTIVE")',
-            [name.trim(), cleanEmail, cleanPhone, hashedPassword]
-        );
+        // If a pending (unverified) row exists for this phone, update it;
+        // otherwise insert a new fully-verified user.
+        if (phoneCheck.length > 0) {
+            await pool.query(
+                'UPDATE users SET name = ?, email = ?, password_hash = ?, phone_verified = 1, status = "ACTIVE", phone_verification_code = NULL, phone_verification_expires_at = NULL, phone_verification_attempts = 0 WHERE id = ?',
+                [name.trim(), cleanEmail, hashedPassword, phoneCheck[0].id]
+            );
+            const userId = phoneCheck[0].id;
+            const user = { id: userId, name: name.trim(), email: cleanEmail, role: 'USER' };
+            const token = generateToken(user);
 
-        const user = { id: result.insertId, name: name.trim(), email: cleanEmail, role: 'USER' };
-        const token = generateToken(user);
+            await logActivity(userId, 'REGISTER', 'User registered with phone verification', getClientIp(req));
 
-        await logActivity(result.insertId, 'REGISTER', 'User registered', getClientIp(req));
+            return res.status(201).json({
+                success: true,
+                message: 'Registration successful! Welcome.',
+                data: {
+                    token,
+                    user: { id: userId, name: name.trim(), email: cleanEmail, phone: normalizedPhone, role: 'USER' }
+                }
+            });
+        } else {
+            // Insert new user — always USER role
+            const [result] = await pool.query(
+                'INSERT INTO users (name, email, phone, password_hash, role, status, phone_verified) VALUES (?, ?, ?, ?, "USER", "ACTIVE", 1)',
+                [name.trim(), cleanEmail, normalizedPhone, hashedPassword]
+            );
 
-        return res.status(201).json({
-            success: true,
-            message: 'Registration successful! Welcome.',
-            data: {
-                token,
-                user: { id: result.insertId, name: name.trim(), email: cleanEmail, phone: cleanPhone, role: 'USER' }
-            }
-        });
+            const user = { id: result.insertId, name: name.trim(), email: cleanEmail, role: 'USER' };
+            const token = generateToken(user);
+
+            await logActivity(result.insertId, 'REGISTER', 'User registered with phone verification', getClientIp(req));
+
+            return res.status(201).json({
+                success: true,
+                message: 'Registration successful! Welcome.',
+                data: {
+                    token,
+                    user: { id: result.insertId, name: name.trim(), email: cleanEmail, phone: normalizedPhone, role: 'USER' }
+                }
+            });
+        }
     } catch (err) {
         next(err);
     }
 });
 
 // POST /api/auth/login
-router.post('/login', loginRules, validate, async (req, res, next) => {
+router.post('/login', loginLimiter, loginRules, validate, async (req, res, next) => {
     try {
         const { identifier, password } = req.body;
         const cleanId = identifier.trim();
 
         // Find by email or phone
         const [rows] = await pool.query(
-            'SELECT id, name, email, phone, password_hash, role, status FROM users WHERE email = ? OR phone = ?',
+            'SELECT id, name, email, phone, password_hash, role, status, phone_verified FROM users WHERE email = ? OR phone = ?',
             [cleanId.toLowerCase(), cleanId]
         );
 
@@ -96,6 +136,16 @@ router.post('/login', loginRules, validate, async (req, res, next) => {
         if (!isMatch) {
             await logActivity(user.id, 'LOGIN_FAILED', 'Incorrect password', getClientIp(req));
             return res.status(401).json({ success: false, message: 'Email/phone or password is incorrect.' });
+        }
+
+        // Check phone verification — block login if not verified
+        // Admin accounts (role=ADMIN) are exempt since they don't have phone numbers
+        if (user.role !== 'ADMIN' && !user.phone_verified) {
+            await logActivity(user.id, 'LOGIN_FAILED', 'Login blocked: phone not verified', getClientIp(req));
+            return res.status(403).json({
+                success: false,
+                message: 'Nomor HP Anda belum diverifikasi. Silakan lakukan verifikasi terlebih dahulu.'
+            });
         }
 
         const token = generateToken(user);
@@ -123,6 +173,10 @@ router.post('/login', loginRules, validate, async (req, res, next) => {
 // POST /api/auth/logout
 router.post('/logout', auth, async (req, res, next) => {
     try {
+        // Blacklist the token so it can't be reused after logout
+        if (process.env.SESSION_INVALIDATE_ON_LOGOUT !== 'false') {
+            await blacklistToken(req.token, req.user.id);
+        }
         await logActivity(req.user.id, 'LOGOUT', 'User logged out', getClientIp(req));
         return res.json({ success: true, message: 'Logout successful.' });
     } catch (err) {
@@ -134,7 +188,7 @@ router.post('/logout', auth, async (req, res, next) => {
 router.get('/me', auth, async (req, res, next) => {
     try {
         const [rows] = await pool.query(
-            'SELECT id, name, email, phone, role, status, created_at FROM users WHERE id = ?',
+            'SELECT id, name, email, phone, role, status, phone_verified, created_at FROM users WHERE id = ?',
             [req.user.id]
         );
 
@@ -152,6 +206,7 @@ router.get('/me', auth, async (req, res, next) => {
                 phone: u.phone,
                 role: u.role,
                 status: u.status,
+                phoneVerified: u.phone_verified === 1,
                 createdAt: u.created_at
             }
         });
