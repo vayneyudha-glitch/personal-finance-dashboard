@@ -1,50 +1,50 @@
-/* ============================================================
-   ROUTES/ADMIN.JS — Admin Control Center & Analytics Platform
+﻿/* ============================================================
+   ROUTES/ADMIN.JS â€” Admin Control Center & Analytics Platform
    ============================================================
    ENDPOINTS:
    --- Executive Dashboard ---
-   GET  /api/admin/dashboard          — KPIs + comparison + charts + date filter
+   GET  /api/admin/dashboard          â€” KPIs + comparison + charts + date filter
    --- User Management ---
-   GET  /api/admin/users              — List users (with financial summary)
-   GET  /api/admin/users/:id         — User 360° view (profile + financial + activity)
-   PUT  /api/admin/users/:id         — Update user
-   DELETE /api/admin/users/:id       — Delete user
+   GET  /api/admin/users              â€” List users (with financial summary)
+   GET  /api/admin/users/:id         â€” User 360Â° view (profile + financial + activity)
+   PUT  /api/admin/users/:id         â€” Update user
+   DELETE /api/admin/users/:id       â€” Delete user
    --- Transaction Management ---
-   GET  /api/admin/transactions       — All transactions (filter, sort, pagination)
-   DELETE /api/admin/transactions/:id — Delete transaction
-   POST /api/admin/transactions/bulk-delete — Bulk delete
+   GET  /api/admin/transactions       â€” All transactions (filter, sort, pagination)
+   DELETE /api/admin/transactions/:id â€” Delete transaction
+   POST /api/admin/transactions/bulk-delete â€” Bulk delete
    --- Financial Analytics ---
-   GET  /api/admin/analytics         — Full analytics (descriptive stats)
-   GET  /api/admin/analytics/income  — Income analysis
-   GET  /api/admin/analytics/expense  — Expense analysis
-   GET  /api/admin/analytics/cashflow — Cash flow analysis
+   GET  /api/admin/analytics         â€” Full analytics (descriptive stats)
+   GET  /api/admin/analytics/income  â€” Income analysis
+   GET  /api/admin/analytics/expense  â€” Expense analysis
+   GET  /api/admin/analytics/cashflow â€” Cash flow analysis
    --- Category Analytics ---
-   GET  /api/admin/categories/usage  — Category usage stats
+   GET  /api/admin/categories/usage  â€” Category usage stats
    --- Budget Management ---
-   GET  /api/admin/budgets           — List budgets
-   POST /api/admin/budgets           — Create budget
-   PUT  /api/admin/budgets/:id      — Update budget
-   DELETE /api/admin/budgets/:id    — Delete budget
+   GET  /api/admin/budgets           â€” List budgets
+   POST /api/admin/budgets           â€” Create budget
+   PUT  /api/admin/budgets/:id      â€” Update budget
+   DELETE /api/admin/budgets/:id    â€” Delete budget
    --- Reports ---
-   GET  /api/admin/reports            — Generate report (type, date, user, category)
+   GET  /api/admin/reports            â€” Generate report (type, date, user, category)
    --- Data Quality ---
-   GET  /api/admin/data-quality      — Data quality checks + score
+   GET  /api/admin/data-quality      â€” Data quality checks + score
    --- Forecasting ---
-   GET  /api/admin/forecast          — Financial forecast (moving avg + linear trend)
+   GET  /api/admin/forecast          â€” Financial forecast (moving avg + linear trend)
    --- Alerts ---
-   GET  /api/admin/alerts            — System alerts
-   POST /api/admin/alerts/:id/read  — Mark alert as read
+   GET  /api/admin/alerts            â€” System alerts
+   POST /api/admin/alerts/:id/read  â€” Mark alert as read
    --- Activity Logs ---
-   GET  /api/admin/activity-logs     — Activity logs (filter, pagination)
+   GET  /api/admin/activity-logs     â€” Activity logs (filter, pagination)
    --- Security Center ---
-   GET  /api/admin/security          — Failed logins, recent logins, suspicious
+   GET  /api/admin/security          â€” Failed logins, recent logins, suspicious
    --- System Health ---
-   GET  /api/admin/system-health     — Server/DB health
+   GET  /api/admin/system-health     â€” Server/DB health
    --- Settings ---
-   GET  /api/admin/settings         — System settings
-   PUT  /api/admin/settings         — Update settings
+   GET  /api/admin/settings         â€” System settings
+   PUT  /api/admin/settings         â€” Update settings
    --- Insights ---
-   GET  /api/admin/insights         — Automated business insights
+   GET  /api/admin/insights         â€” Automated business insights
    ============================================================ */
 
 const express = require('express');
@@ -100,7 +100,7 @@ function buildDateRange(filter, customFrom, customTo) {
             if (customTo) dateTo = new Date(customTo);
             break;
         default:
-            // No filter — all time
+            // No filter â€” all time
             break;
     }
 
@@ -130,7 +130,7 @@ function dateRangeClause(dateFrom, dateTo, column = 't.transaction_date') {
 }
 
 /* ============================================================
-   GET /api/admin/dashboard — Executive Dashboard
+   GET /api/admin/dashboard â€” Executive Dashboard
    ============================================================ */
 router.get('/dashboard', async (req, res, next) => {
     try {
@@ -380,7 +380,7 @@ router.get('/dashboard', async (req, res, next) => {
 });
 
 /* ============================================================
-   GET /api/admin/users — List users with financial summary
+   GET /api/admin/users â€” List users with financial summary
    ============================================================ */
 router.get('/users', async (req, res, next) => {
     try {
@@ -458,7 +458,7 @@ router.get('/users', async (req, res, next) => {
 });
 
 /* ============================================================
-   GET /api/admin/users/:id — User 360° view
+   GET /api/admin/users/:id â€” User 360Â° view
    ============================================================ */
 router.get('/users/:id', async (req, res, next) => {
     try {
@@ -586,7 +586,7 @@ router.get('/users/:id', async (req, res, next) => {
 });
 
 /* ============================================================
-   PUT /api/admin/users/:id — Update user
+   PUT /api/admin/users/:id â€” Update user
    ============================================================ */
 router.put('/users/:id', userUpdateRules, validate, async (req, res, next) => {
     try {
@@ -655,7 +655,7 @@ router.put('/users/:id', userUpdateRules, validate, async (req, res, next) => {
 });
 
 /* ============================================================
-   DELETE /api/admin/users/:id — Delete user
+   DELETE /api/admin/users/:id â€” Delete user
    ============================================================ */
 router.delete('/users/:id', async (req, res, next) => {
     try {
@@ -680,7 +680,7 @@ router.delete('/users/:id', async (req, res, next) => {
 });
 
 /* ============================================================
-   GET /api/admin/transactions — All transactions (enhanced)
+   GET /api/admin/transactions â€” All transactions (enhanced)
    ============================================================ */
 router.get('/transactions', async (req, res, next) => {
     try {
@@ -750,7 +750,7 @@ router.get('/transactions', async (req, res, next) => {
 });
 
 /* ============================================================
-   DELETE /api/admin/transactions/:id — Delete transaction
+   DELETE /api/admin/transactions/:id â€” Delete transaction
    ============================================================ */
 router.delete('/transactions/:id', async (req, res, next) => {
     try {
@@ -768,7 +768,7 @@ router.delete('/transactions/:id', async (req, res, next) => {
 });
 
 /* ============================================================
-   POST /api/admin/transactions/bulk-delete — Bulk delete
+   POST /api/admin/transactions/bulk-delete â€” Bulk delete
    ============================================================ */
 router.post('/transactions/bulk-delete', async (req, res, next) => {
     try {
@@ -788,7 +788,7 @@ router.post('/transactions/bulk-delete', async (req, res, next) => {
 });
 
 /* ============================================================
-   GET /api/admin/analytics — Full Financial Analytics
+   GET /api/admin/analytics â€” Full Financial Analytics
    ============================================================ */
 router.get('/analytics', async (req, res, next) => {
     try {
@@ -814,11 +814,11 @@ router.get('/analytics', async (req, res, next) => {
 
         // Median calculation (can't use SQL MEDIAN directly)
         const [incomeVals] = await pool.query(
-            `SELECT amount FROM transactions WHERE type = 'Income' ${dr.clause} ORDER BY amount`,
+            `SELECT amount FROM transactions t WHERE type = 'Income' ${dr.clause} ORDER BY amount`,
             dr.params
         );
         const [expenseVals] = await pool.query(
-            `SELECT amount FROM transactions WHERE type = 'Expense' ${dr.clause} ORDER BY amount`,
+            `SELECT amount FROM transactions t WHERE type = 'Expense' ${dr.clause} ORDER BY amount`,
             dr.params
         );
 
@@ -855,7 +855,7 @@ router.get('/analytics', async (req, res, next) => {
                 COUNT(DISTINCT DATE(transaction_date)) as active_days
              FROM (
                  SELECT DATE(transaction_date) as daily_date, SUM(amount) as daily_total
-                 FROM transactions WHERE type = 'Expense' ${dr.clause}
+                 FROM transactions t WHERE type = 'Expense' ${dr.clause}
                  GROUP BY DATE(transaction_date)
              ) sub`,
             dr.params
@@ -937,7 +937,7 @@ router.get('/analytics', async (req, res, next) => {
 });
 
 /* ============================================================
-   GET /api/admin/analytics/income — Income Analysis
+   GET /api/admin/analytics/income â€” Income Analysis
    ============================================================ */
 router.get('/analytics/income', async (req, res, next) => {
     try {
@@ -952,7 +952,7 @@ router.get('/analytics/income', async (req, res, next) => {
                 COALESCE(AVG(amount), 0) as avg,
                 COALESCE(MIN(amount), 0) as min,
                 COALESCE(MAX(amount), 0) as max
-             FROM transactions WHERE type = 'Income' ${dr.clause}`,
+             FROM transactions t WHERE type = 'Income' ${dr.clause}`,
             dr.params
         );
 
@@ -1007,7 +1007,7 @@ router.get('/analytics/income', async (req, res, next) => {
 });
 
 /* ============================================================
-   GET /api/admin/analytics/expense — Expense Analysis
+   GET /api/admin/analytics/expense â€” Expense Analysis
    ============================================================ */
 router.get('/analytics/expense', async (req, res, next) => {
     try {
@@ -1022,7 +1022,7 @@ router.get('/analytics/expense', async (req, res, next) => {
                 COALESCE(AVG(amount), 0) as avg,
                 COALESCE(MIN(amount), 0) as min,
                 COALESCE(MAX(amount), 0) as max
-             FROM transactions WHERE type = 'Expense' ${dr.clause}`,
+             FROM transactions t WHERE type = 'Expense' ${dr.clause}`,
             dr.params
         );
 
@@ -1107,7 +1107,7 @@ router.get('/analytics/expense', async (req, res, next) => {
 });
 
 /* ============================================================
-   GET /api/admin/analytics/cashflow — Cash Flow Analysis
+   GET /api/admin/analytics/cashflow â€” Cash Flow Analysis
    ============================================================ */
 router.get('/analytics/cashflow', async (req, res, next) => {
     try {
@@ -1201,7 +1201,7 @@ router.get('/analytics/cashflow', async (req, res, next) => {
 });
 
 /* ============================================================
-   GET /api/admin/categories/usage — Category Usage Stats
+   GET /api/admin/categories/usage â€” Category Usage Stats
    ============================================================ */
 router.get('/categories/usage', async (req, res, next) => {
     try {
@@ -1398,7 +1398,7 @@ router.delete('/budgets/:id', async (req, res, next) => {
 });
 
 /* ============================================================
-   GET /api/admin/reports — Report Generator
+   GET /api/admin/reports â€” Report Generator
    ============================================================ */
 router.get('/reports', async (req, res, next) => {
     try {
@@ -1542,7 +1542,7 @@ router.get('/reports', async (req, res, next) => {
 });
 
 /* ============================================================
-   GET /api/admin/data-quality — Data Quality Checks
+   GET /api/admin/data-quality â€” Data Quality Checks
    ============================================================ */
 router.get('/data-quality', async (req, res, next) => {
     try {
@@ -1638,7 +1638,7 @@ router.get('/data-quality', async (req, res, next) => {
 });
 
 /* ============================================================
-   GET /api/admin/forecast — Financial Forecast
+   GET /api/admin/forecast â€” Financial Forecast
    ============================================================ */
 router.get('/forecast', async (req, res, next) => {
     try {
@@ -1749,7 +1749,7 @@ router.get('/forecast', async (req, res, next) => {
 });
 
 /* ============================================================
-   GET /api/admin/alerts — System Alerts
+   GET /api/admin/alerts â€” System Alerts
    ============================================================ */
 router.get('/alerts', async (req, res, next) => {
     try {
@@ -1875,7 +1875,7 @@ router.get('/alerts', async (req, res, next) => {
 });
 
 /* ============================================================
-   POST /api/admin/alerts/:id/read — Mark alert as read
+   POST /api/admin/alerts/:id/read â€” Mark alert as read
    ============================================================ */
 router.post('/alerts/:id/read', async (req, res, next) => {
     try {
@@ -1888,7 +1888,7 @@ router.post('/alerts/:id/read', async (req, res, next) => {
 });
 
 /* ============================================================
-   GET /api/admin/activity-logs — Enhanced Activity Logs
+   GET /api/admin/activity-logs â€” Enhanced Activity Logs
    ============================================================ */
 router.get('/activity-logs', async (req, res, next) => {
     try {
@@ -1952,7 +1952,7 @@ router.get('/activity-logs', async (req, res, next) => {
 });
 
 /* ============================================================
-   GET /api/admin/security — Security Center
+   GET /api/admin/security â€” Security Center
    ============================================================ */
 router.get('/security', async (req, res, next) => {
     try {
@@ -2045,7 +2045,7 @@ router.get('/security', async (req, res, next) => {
 });
 
 /* ============================================================
-   GET /api/admin/system-health — System Health
+   GET /api/admin/system-health â€” System Health
    ============================================================ */
 router.get('/system-health', async (req, res, next) => {
     try {
@@ -2121,7 +2121,7 @@ function formatUptime(seconds) {
 }
 
 /* ============================================================
-   GET /api/admin/settings — System Settings
+   GET /api/admin/settings â€” System Settings
    ============================================================ */
 router.get('/settings', async (req, res, next) => {
     try {
@@ -2148,7 +2148,7 @@ router.get('/settings', async (req, res, next) => {
 });
 
 /* ============================================================
-   PUT /api/admin/settings — Update Settings
+   PUT /api/admin/settings â€” Update Settings
    ============================================================ */
 router.put('/settings', async (req, res, next) => {
     try {
@@ -2175,7 +2175,7 @@ router.put('/settings', async (req, res, next) => {
 });
 
 /* ============================================================
-   GET /api/admin/insights — Automated Business Insights
+   GET /api/admin/insights â€” Automated Business Insights
    ============================================================ */
 router.get('/insights', async (req, res, next) => {
     try {
@@ -2327,3 +2327,5 @@ router.get('/insights', async (req, res, next) => {
 });
 
 module.exports = router;
+
+

@@ -2,7 +2,7 @@
    CONFIG.JS — Application Configuration
    ============================================================ */
 
-const API_BASE_URL = 'https://carroll-trees-pickup-impressed.trycloudflare.com/api';
+const API_BASE_URL = '/api';
 
 // localStorage keys
 const AUTH_KEYS = {
